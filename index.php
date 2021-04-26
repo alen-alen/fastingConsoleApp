@@ -1,19 +1,24 @@
+#!/usr/bin/env php
 <?php
 
+
 use App\App;
-use App\Fast;
 
 require __DIR__ . '/vendor/autoload.php';
+
 require "helpers.php";
 
 
 
-$newFast=new Fast();
+$app=new App();
+
+$app->run();
 
 
-$newFast->StartNewFast();
 
-$newFast->checkStatus();
+
+
+
 
 
 

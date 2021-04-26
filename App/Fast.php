@@ -2,138 +2,88 @@
 
 namespace App;
 
-use DateTime;
-use Carbon\Carbon;
-use Carbon\Traits\Date;
-
 class Fast
 {
-    public $status = false,
-        $startDate,
-        $endDate,
-        $elapsedTime,
-        $type,
-        $types = ['13', '16', '18']; // this types will not be here
 
-    public function __construct()
-    {
-        $this->status = true;
-    }
+    public $status = false;
 
-    public function StartNewFast()
-    {
-        $this->setStartDate();
+    public $startDate;
 
-        $this->setType();
+    public $endDate;
 
-        $this->setEndDate();
+    public $type;
 
-        $newFast = [
-            'id' => rand(0, 10),
-            'status' => $this->status,
-            '$startDate' => $this->startDate,
-            "endDate" => $this->endDate,
-            'elapsedTime' => $this->setTimeElapsed(),
-            'type' => $this->type,
-        ];
-        $oldFasts = file_get_contents('fasts.json');
-        $decodedFasts = (array)json_decode($oldFasts);
+    public $types = ['13', '16', '18'];
 
-        $decodedFasts[] = $newFast;
-        $jsonData = json_encode($decodedFasts);
-        file_put_contents('fasts.json', $jsonData);
-    }
-    public function test()
-    {
-        $oldFasts = file_get_contents('fasts.json');
-        $decodedFasts = json_decode($oldFasts);
-        dd($decodedFasts->fasts);
-    }
     public function setStartDate()
     {
-        echo 'Enter your starting date' . "\n";
+        output("Enter your starting date MM/dd,HH:ii (July 22,17:30)");
 
+        $userDateInput = input();
 
-        echo 'Enter your starting month (the number of the month )' . "\n";
-        //    temp validations
-        $month = trim(fgets(STDIN));
-        $month = $month <= 12 ? $month : die('incorect month');
+        if ($userDateInput) {
 
+            $this->startDate = date("M d,H:i", strtotime($userDateInput));
 
-        echo 'Enter your starting day (number of  the day in the month ):' . "\n";
-        $day = trim(fgets(STDIN));
-        $day = $day <= 31 ? $day : die('incorect day');
-        echo 'Enter your starting hour :' . "\n";
-        $hour = trim(fgets(STDIN));
-        $hour = $hour < 24 ? $hour : die('wrong hour');
-        echo 'Enter your starting minutes :' . "\n";
-        $minutes = trim(fgets(STDIN));
-        $minutes = $minutes < 60 ? $minutes : die('minutes wrong');
-        $date = new DateTime();
-        $date->setDate(date("Y"), $month, $day);
-        $date->setTime($hour, $minutes, date("s"));
+            return;
+        }
+        echo " \n Invalid Format \n";
 
-
-
-
-        $this->startDate = $date;
+        $this->setStartDate();
     }
+
     public function setType()
     {
         echo "Choose your type: \n";
+
         foreach ($this->types as $type) {
+
             echo "$type \n";
         }
         $userTypeInput = trim(fgets(STDIN));
 
-        // i will need to create a method to validate the inputs
-        //    and a method to activate actions
         if (array_key_exists($userTypeInput, $this->types)) {
+
             $this->type = $this->types[$userTypeInput];
+
             return;
         } else {
+
             echo "wrong Input \n";
+
             $this->setType();
         }
 
-        // i will need to create a method to validate the inputs
         $this->type = $userTypeInput;
     }
+
     public function setEndDate()
     {
-        $fastType = $this->type;
-        $startDateObj = $this->startDate;
-        $endDate = clone $startDateObj;
 
-        $this->endDate =  $endDate->modify("+$fastType hour");
+        $this->endDate = date("M d,H:i", strtotime("+$this->type hours", strtotime($this->startDate)));
     }
 
-    public function setTimeElapsed()
+    public function saveToJson()
     {
-        $currentDate = new DateTime();
-        $diff = $this->startDate->diff($currentDate);
+        $data = file_get_contents('results.json');
 
-        $this->elapsedTime = $diff->format(("%H:%I:%S"));
-    }
-    public function stop()
-    {
-        $this->status = false;
-    }
-    public function checkStatus()
-    {
-        $this->printFast();
-    }
-    public function printFast()
-    {
-        var_dump($this);
-    }
-    public function save()
-    {
+        $existingFasts = (array)json_decode($data);
 
-        $inp = file_get_contents('fasts.json');
-        $tempArray = json_decode($inp);
-        array_push($tempArray,);
-        $jsonData = json_encode($tempArray);
-        file_put_contents('results.json', $jsonData);
+        // $newFast = [
+        //     'status' => $this->status,
+        //     'type' => $this->type . ' hours',
+        //     'startDate' => $this->startDate,
+        //     'endDate' => $this->endDate,
+        // ];
+
+        array_push($existingFasts, $this);
+
+        $newJsonData = json_encode($existingFasts);
+
+        if (file_put_contents('results.json', $newJsonData)) {
+
+            return true;
+        }
+        return false;
     }
 }
