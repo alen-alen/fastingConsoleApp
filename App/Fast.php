@@ -40,7 +40,7 @@ class Fast
 
             echo "$type \n";
         }
-        $userTypeInput = trim(fgets(STDIN));
+        $userTypeInput = input();
 
         if (array_key_exists($userTypeInput, $this->types)) {
 
@@ -69,12 +69,7 @@ class Fast
 
         $existingFasts = (array)json_decode($data);
 
-        // $newFast = [
-        //     'status' => $this->status,
-        //     'type' => $this->type . ' hours',
-        //     'startDate' => $this->startDate,
-        //     'endDate' => $this->endDate,
-        // ];
+     
 
         array_push($existingFasts, $this);
 

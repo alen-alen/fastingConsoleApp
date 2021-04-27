@@ -45,6 +45,8 @@ class FastAction
 
         if ($fast == true) {
 
+            //make a function that counts the hours passed from start date to current time or from current time to start date
+
             $currentTime = date('M d,H:i', strtotime('-1 hours'));
 
             $timeDifference = (strtotime($currentTime) - strtotime($fast->startDate)) - strtotime('-1 hour');
@@ -57,7 +59,7 @@ class FastAction
 
             outputOption('End date', $fast->endDate);
 
-            outputOption($timeDifference > 0 ? 'Time until start' : 'Time elapsed', date('h:i:s', $timeDifference));
+            outputOption($timeDifference < 0 ? 'Time until start' : 'Time elapsed', date('h:i:s', $timeDifference));
         } else {
 
             output('no active fast');
@@ -69,9 +71,11 @@ class FastAction
 
         $existingFasts = json_decode(file_get_contents('results.json'));
 
-        $existingFasts = array_filter($existingFasts, function ($fast) {
+        array_filter($existingFasts, function ($fast) {
 
             if ($fast->status == true) {
+
+
 
                 self::$activeFast = null;
 
@@ -79,48 +83,61 @@ class FastAction
             }
         });
 
+
+
         $newJsonData = json_encode($existingFasts);
 
-        if (!file_put_contents('results.json', $newJsonData)) {
 
-            return 'something went wrong oops!';
-        }
-        return "Active Fast stoped at: " . date('M d,H:i:s');
+
+        file_put_contents('results.json', $newJsonData);
     }
 
-    // public static function editFast()
-    // {
+    public static function editFast()
+    {
 
-    //     $existingFasts = json_decode(file_get_contents('results.json'));
+        $existingFasts = (array)json_decode(file_get_contents('results.json'));
 
-    //     $existingFasts = array_filter($existingFasts, function ($fast) {
+        array_filter($existingFasts, function ($fast) {
 
-    //         if ($fast->status == true) {
+            if ($fast->status == true) {
 
-    //             $fast->setStartDate();
-    //         }
-    //     });
+                self::$activeFast->setStartDate();
 
-    //     $newJsonData = json_encode($existingFasts);
+                self::$activeFast->setType();
 
-    //     if (!file_put_contents('results.json', $newJsonData)) {
+                self::$activeFast->setEndDate();
 
-    //         return 'something went wrong oops!';
-    //     }
-    //     return "Active Fast stoped at: " . date('M d,H:i:s');
-    // }
+                $fast = self::$activeFast;
+            }
+        });
+
+        $newJsonData = json_encode($existingFasts);
+
+        file_put_contents('results.json', $newJsonData);
+    }
 
 
     public static function setActiveFast()
     {
-
         if (!self::$activeFast) {
 
             foreach (json_decode(file_get_contents('results.json')) as $fast) {
 
                 if ($fast->status == true) {
 
-                    self::$activeFast = $fast;
+                    $tmpFast = new Fast();
+
+                    $tmpFast->status = $fast->status;
+
+                    $tmpFast->startDate = $fast->startDate;
+
+                    $tmpFast->endDate = $fast->endDate;
+
+                    $tmpFast->type = $fast->type;
+
+                    self::$activeFast = $tmpFast;
+
+                    return;
                 }
             }
         }

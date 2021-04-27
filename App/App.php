@@ -8,9 +8,11 @@ class App
 
     public function  run()
     {
-        FastAction::setActiveFast();
+ 
 
         while ($this->status) {
+
+            FastAction::setActiveFast();
 
             outputOption(1, 'Start New Fast');
 
@@ -18,7 +20,7 @@ class App
 
             outputOption(3, 'End the active fast');
 
-            // outputOption(4, 'Update an Active Fast');
+            outputOption(4, 'Update an Active Fast');
 
             outputOption(5, 'Exit');
 
@@ -44,12 +46,12 @@ class App
 
                     break;
 
-                // case 4:
-                //     FastAction::editFast();
+                case 4:
+                    FastAction::editFast();
 
-                //     brakeLine();
+                    brakeLine();
 
-                //     break;
+                    break;
 
                 case 5:
 
