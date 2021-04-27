@@ -2,6 +2,8 @@
 
 namespace App;
 
+use DateTime;
+
 class Fast
 {
 
@@ -13,6 +15,8 @@ class Fast
 
     public $type;
 
+    public $timeElapsed;
+
     public $types = ['13', '16', '18'];
 
     public function setStartDate()
@@ -20,7 +24,7 @@ class Fast
         output("Enter your starting date (MM dd,HH:ii) example: July 22,17:30");
 
         $userDateInput = input();
-        
+
 
         if (strtotime($userDateInput)) {
 
@@ -37,9 +41,9 @@ class Fast
     {
         echo "Choose your type: \n";
 
-        foreach ($this->types as $key =>$type) {
+        foreach ($this->types as $key => $type) {
 
-           outputOption($key+1,$type.'hour fast');
+            outputOption($key + 1, $type . 'hour fast');
         }
         $userTypeInput = input();
 
@@ -79,5 +83,19 @@ class Fast
             return true;
         }
         return false;
+    }
+    public function setTimeElapsed()
+    {
+        $startDate = new DateTime($this->startDate);
+
+        $currentDate = new DateTime();
+
+        $interval = $startDate->diff($currentDate);
+
+        $timeElapsed = $interval->format('%H:%I:%S');
+
+        $this->timeElapsed = $timeElapsed;
+
+        return  $timeElapsed;
     }
 }

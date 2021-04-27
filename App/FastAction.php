@@ -2,6 +2,8 @@
 
 namespace App;
 
+use DateTime;
+
 class FastAction
 {
     private static $activeFast;
@@ -19,16 +21,18 @@ class FastAction
 
             $fast->setEndDate();
 
+            $fast->setTimeElapsed();
+
             $fast->status = true;
 
             if ($fast->saveToJson()) {
 
                 self::$activeFast = $fast;
 
-                return 'Succesfuly created new fast';
+                output('Succesfuly created new fast');
             } else {
 
-                return 'Something went wrong';
+                output('Something went wrong');
             }
         } else {
 
@@ -44,21 +48,17 @@ class FastAction
 
         if ($fast == true) {
 
-            //make a function that counts the hours passed from start date to current time or from current time to start date
+            
 
-            $currentTime = date('M d,H:i', strtotime('-1 hours'));
+            outputOption('Status:', $fast->status ? 'Active' : 'Inactive');
 
-            $timeDifference = (strtotime($currentTime) - strtotime($fast->startDate)) - strtotime('-1 hour');
+            outputOption('Fast type:', $fast->type);
 
-            outputOption('Status', $fast->status?'Active':'Inactive');
+            outputOption('Start date:', $fast->startDate);
 
-            outputOption('Fast type', $fast->type);
+            outputOption('End date:', $fast->endDate);
 
-            outputOption('Start date', $fast->startDate);
-
-            outputOption('End date', $fast->endDate);
-
-            outputOption($timeDifference < 0 ? 'Time until start' : 'Time elapsed', date('h:i:s', $timeDifference));
+            outputOption('Time Elapsed:', $fast->setTimeElapsed());
         } else {
 
             output('no active fast');
@@ -81,7 +81,10 @@ class FastAction
 
         $newJsonData = json_encode($existingFasts);
 
-        file_put_contents('results.json', $newJsonData);
+        if (file_put_contents('results.json', $newJsonData)) {
+
+            output('Active Fast Stoped!');
+        }
     }
 
     public static function editFast()
@@ -105,28 +108,35 @@ class FastAction
 
         $newJsonData = json_encode($existingFasts);
 
-        file_put_contents('results.json', $newJsonData);
+        if (file_put_contents('results.json', $newJsonData)) {
+
+            output('Edited Active Fast');
+        }
     }
 
     public static function listAll()
     {
         foreach (json_decode(file_get_contents('results.json')) as $fast) {
 
-            $currentTime = date('M d,H:i', strtotime('-1 hours'));
+            if($fast->status==false){
+                brakeLine();
 
-            $timeDifference = (strtotime($currentTime) - strtotime($fast->startDate)) - strtotime('-1 hour');
-            brakeLine();
-            outputOption('Status', $fast->status?'Active':'Inactive');
-
-            outputOption('Fast type', $fast->type);
-
-            outputOption('Start date', $fast->startDate);
-
-            outputOption('End date', $fast->endDate);
-
-            outputOption($timeDifference < 0 ? 'Time until start' : 'Time elapsed', date('h:i:s', $timeDifference));
-            brakeLine();
+                outputOption('Status', $fast->status ? 'Active' : 'Inactive');
+    
+                outputOption('Fast type', $fast->type);
+    
+                outputOption('Start date', $fast->startDate);
+    
+                outputOption('End date', $fast->endDate);
+    
+                outputOption('Time Elapsed', $fast->timeElapsed);
+    
+                brakeLine();
+            }
         }
+
+        self::status();
+        brakeLine();
     }
 
     public static function setActiveFast()
@@ -154,4 +164,6 @@ class FastAction
             }
         }
     }
+
+
 }

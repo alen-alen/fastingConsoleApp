@@ -8,8 +8,9 @@ class App
 
     public function  run()
     {
+       
         while ($this->status) {
-
+     
             FastAction::setActiveFast();
 
             outputOption(1, 'Start New Fast');
@@ -27,7 +28,7 @@ class App
             switch (input()) {
                 case 1:
 
-                    output(FastAction::startNew());
+                    FastAction::startNew();
 
                     brakeLine();
 
@@ -54,8 +55,6 @@ class App
                     break;
                 case 5:
 
-               
-
                     FastAction::listAll();
 
                     break;
@@ -77,7 +76,7 @@ class App
         }
     }
 
-    public function exit()
+    protected function exit()
     {
         $this->status = false;
     }
