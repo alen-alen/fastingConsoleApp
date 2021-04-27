@@ -81,29 +81,35 @@ class FastAction
 
     public static function editFast()
     {
+        if(self::$activeFast){
+            $existingFasts = (array)json_decode(file_get_contents('results.json'));
 
-        $existingFasts = (array)json_decode(file_get_contents('results.json'));
-
-        array_filter($existingFasts, function ($fast) {
-
-            if ($fast->status == true) {
-
-                self::$activeFast->setStartDate();
-
-                self::$activeFast->setType();
-
-                self::$activeFast->setEndDate();
-
-                $fast = self::$activeFast;
+            array_filter($existingFasts, function ($fast) {
+    
+                if ($fast->status == true) {
+    
+                    self::$activeFast->setStartDate();
+    
+                    self::$activeFast->setType();
+    
+                    self::$activeFast->setEndDate();
+    
+                    $fast = self::$activeFast;
+                }
+            });
+    
+            $newJsonData = json_encode($existingFasts);
+    
+            if (file_put_contents('results.json', $newJsonData)) {
+    
+                output('Edited Active Fast');
             }
-        });
 
-        $newJsonData = json_encode($existingFasts);
-
-        if (file_put_contents('results.json', $newJsonData)) {
-
-            output('Edited Active Fast');
+        }else{
+            output('There is no active fast!');
         }
+
+  
     }
 
     public static function listAll()

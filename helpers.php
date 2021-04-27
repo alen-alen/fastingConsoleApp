@@ -33,7 +33,9 @@ function printArr(array $data){
 
     foreach($data as $key =>$value){
       
-        outputOption($key,$value);
+
+       
+        outputOption($key,$value['name']);
        
     }
     brakeLine();
