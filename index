@@ -3,11 +3,21 @@
 
 
 use App\App;
+use App\Core\Repository;
 
 require __DIR__ . '/vendor/autoload.php';
 
 require "helpers.php";
 
+$repoData=require 'repositoryData.php';
+
+Repository::bind('nav',$repoData['nav']);
+
+Repository::bind('fastTypes',$repoData['fastTypes']);
+
+
+
+// dd(Repository::get('properties'));
 
 
 $app=new App();

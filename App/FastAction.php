@@ -2,11 +2,12 @@
 
 namespace App;
 
-use DateTime;
 
 class FastAction
 {
     private static $activeFast;
+
+    ////////////////////////////////////////////////START A NEW FAST
 
     public static function startNew()
     {
@@ -41,30 +42,21 @@ class FastAction
             return self::status();
         }
     }
-
+    ///////////////////////////////////////////////////////////////// OUTPUT THE ACTIVE FAST
     public static function status()
     {
         $fast = self::$activeFast;
 
         if ($fast == true) {
 
-            
+            self::printFast($fast);
 
-            outputOption('Status:', $fast->status ? 'Active' : 'Inactive');
-
-            outputOption('Fast type:', $fast->type);
-
-            outputOption('Start date:', $fast->startDate);
-
-            outputOption('End date:', $fast->endDate);
-
-            outputOption('Time Elapsed:', $fast->setTimeElapsed());
         } else {
 
             output('no active fast');
         }
     }
-
+    /////////////////////////////////////////////////////////////////////////////STOP THE ACTIVE FAST
     public static function stopFast()
     {
         $existingFasts = json_decode(file_get_contents('results.json'));
@@ -118,25 +110,13 @@ class FastAction
     {
         foreach (json_decode(file_get_contents('results.json')) as $fast) {
 
-            if($fast->status==false){
-                brakeLine();
+            if ($fast->status == false) {
 
-                outputOption('Status', $fast->status ? 'Active' : 'Inactive');
-    
-                outputOption('Fast type', $fast->type);
-    
-                outputOption('Start date', $fast->startDate);
-    
-                outputOption('End date', $fast->endDate);
-    
-                outputOption('Time Elapsed', $fast->timeElapsed);
-    
-                brakeLine();
+                self::printFast($fast);
             }
         }
 
-        self::status();
-        brakeLine();
+        self::$activeFast ? self::printFast(self::$activeFast) : '';
     }
 
     public static function setActiveFast()
@@ -165,5 +145,20 @@ class FastAction
         }
     }
 
+    protected static function printFast($fast)
+    {
+        brakeLine();
 
+        outputOption('Status', $fast->status ? 'Active' : 'Inactive');
+
+        outputOption('Fast type', $fast->type .' hour Fast');
+
+        outputOption('Start date', $fast->startDate);
+
+        outputOption('End date', $fast->endDate);
+
+        outputOption('Time Elapsed', $fast->timeElapsed);
+
+        brakeLine();
+    }
 }

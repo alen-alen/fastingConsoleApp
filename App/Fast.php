@@ -3,6 +3,7 @@
 namespace App;
 
 use DateTime;
+use App\Core\Repository;
 
 class Fast
 {
@@ -16,8 +17,6 @@ class Fast
     public $type;
 
     public $timeElapsed;
-
-    public $types = ['13', '16', '18'];
 
     public function setStartDate()
     {
@@ -41,15 +40,17 @@ class Fast
     {
         echo "Choose your type: \n";
 
-        foreach ($this->types as $key => $type) {
+        $typeOptions=Repository::get('fastTypes') ;
 
-            outputOption($key + 1, $type . 'hour fast');
+        foreach ($typeOptions as $key => $type) {
+
+            outputOption($key, $type . ' hour fast');
         }
         $userTypeInput = input();
 
-        if (array_key_exists($userTypeInput, $this->types)) {
+        if (array_key_exists($userTypeInput, $typeOptions)) {
 
-            $this->type = $this->types[$userTypeInput];
+            $this->type = $typeOptions[$userTypeInput];
 
             return;
         } else {
