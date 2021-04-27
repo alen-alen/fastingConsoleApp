@@ -27,16 +27,4 @@ function brakeLine()
     echo "\n ------------------- \n";
 }
 
-function printArr(array $data){
 
-    brakeLine();
-
-    foreach($data as $key =>$value){
-      
-
-       
-        outputOption($key,$value['name']);
-       
-    }
-    brakeLine();
-}
