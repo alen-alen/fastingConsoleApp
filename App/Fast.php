@@ -17,13 +17,13 @@ class Fast
     public $type;
 
     public $timeElapsed;
+    
 
     public function setStartDate()
     {
         output("Enter your starting date (MM dd,HH:ii) example: July 22,17:30");
 
         $userDateInput = input();
-
 
         if (strtotime($userDateInput)) {
 

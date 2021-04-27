@@ -8,12 +8,15 @@ class App
 {
     private $status = true;
 
+    private $quote;
 
+    public function __construct(Quote $quote)
+    {
+        $this->quote=$quote;
+    }
 
     public function  run()
     {
-
-
         while ($this->status) {
 
             //Check if there is an active fast in the json file and set it  as a property
@@ -26,38 +29,40 @@ class App
             $selectedOption = input();
 
             //call for action depending on the user input
-            $this->navHandler($selectedOption,Repository::get('nav') ,FastAction::getActiveFast());
+            $this->navHandler($selectedOption, Repository::get('nav'), FastAction::getActiveFast());
         }
     }
 
-    protected function exit()
+    protected function navHandler($selectedOption,array $navActions, $activeFast = null)
     {
-        $this->status = false;
-    }
-
-    protected function navHandler($selectedOption,$navActions, $activeFast = null)
-    {
-
- 
         if ($activeFast) {
+            
             unset($navActions[1]);
         } else {
+
             unset($navActions[3]);
+
             unset($navActions[4]);
         }
-        
-        if (array_key_exists($selectedOption,$navActions)) {
+
+        if (array_key_exists($selectedOption, $navActions)) {
 
             $selectedAction = Repository::get('nav')[$selectedOption]['action'];
 
-        
+         
 
             if ($selectedOption == 6) {
+
                 $this->$selectedAction();
             } else {
+
+                if($selectedOption==2){
+                    output('Motivation quote: '. '\''. $this->quote->getOne().'\'' );
+                }
+
                 FastAction::$selectedAction();
             }
-        }else{
+        } else {
             output("Option $selectedOption dosent Exist!");
         }
     }
@@ -65,9 +70,11 @@ class App
     {
 
         if ($activeFast) {
+
             unset($data[1]);
         } else {
             unset($data[3]);
+
             unset($data[4]);
         }
 
@@ -78,5 +85,10 @@ class App
             outputOption($key, $value['name']);
         }
         brakeLine();
+    }
+
+    protected function exit()
+    {
+        $this->status = false;
     }
 }

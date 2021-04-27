@@ -4,6 +4,7 @@
 
 use App\App;
 use App\Core\Repository;
+use App\Quote;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -15,12 +16,11 @@ Repository::bind('nav',$repoData['nav']);
 
 Repository::bind('fastTypes',$repoData['fastTypes']);
 
+$quotes=new Quote();
 
+$quotes->getOne();
 
-// dd(Repository::get('properties'));
-
-
-$app=new App();
+$app=new App(new Quote());
 
 $app->run();
 

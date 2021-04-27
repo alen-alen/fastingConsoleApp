@@ -49,6 +49,7 @@ class FastAction
 
         if ($fast == true) {
 
+            // output('motivation quote:'Quotes::getOne())
             self::printFast($fast);
         } else {
 
