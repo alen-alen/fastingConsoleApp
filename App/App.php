@@ -8,8 +8,6 @@ class App
 
     public function  run()
     {
- 
-
         while ($this->status) {
 
             FastAction::setActiveFast();
@@ -22,7 +20,9 @@ class App
 
             outputOption(4, 'Update an Active Fast');
 
-            outputOption(5, 'Exit');
+            outputOption(5, 'List All Fast\'s');
+
+            outputOption(6, 'Exit');
 
             switch (input()) {
                 case 1:
@@ -52,8 +52,15 @@ class App
                     brakeLine();
 
                     break;
-
                 case 5:
+
+               
+
+                    FastAction::listAll();
+
+                    break;
+
+                case 6:
 
                     brakeLine();
 

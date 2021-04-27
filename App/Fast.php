@@ -17,11 +17,12 @@ class Fast
 
     public function setStartDate()
     {
-        output("Enter your starting date MM/dd,HH:ii (July 22,17:30)");
+        output("Enter your starting date (MM dd,HH:ii) example: July 22,17:30");
 
         $userDateInput = input();
+        
 
-        if ($userDateInput) {
+        if (strtotime($userDateInput)) {
 
             $this->startDate = date("M d,H:i", strtotime($userDateInput));
 
@@ -36,9 +37,9 @@ class Fast
     {
         echo "Choose your type: \n";
 
-        foreach ($this->types as $type) {
+        foreach ($this->types as $key =>$type) {
 
-            echo "$type \n";
+           outputOption($key+1,$type.'hour fast');
         }
         $userTypeInput = input();
 
@@ -49,7 +50,7 @@ class Fast
             return;
         } else {
 
-            echo "wrong Input \n";
+            echo "incorect Input \n";
 
             $this->setType();
         }
@@ -68,8 +69,6 @@ class Fast
         $data = file_get_contents('results.json');
 
         $existingFasts = (array)json_decode($data);
-
-     
 
         array_push($existingFasts, $this);
 
