@@ -23,10 +23,10 @@ class App
 
             $this->printNav(Repository::get('nav'), FastAction::getActiveFast());
 
-            $action = input();
+            $selectedOption = input();
 
             //call for action depending on the user input
-            $this->navHandler($action, FastAction::getActiveFast());
+            $this->navHandler($selectedOption,Repository::get('nav') ,FastAction::getActiveFast());
         }
     }
 
@@ -35,24 +35,30 @@ class App
         $this->status = false;
     }
 
-    public function switchOptions()
+    protected function navHandler($selectedOption,$navActions, $activeFast = null)
     {
-    }
 
-    protected function navHandler($action, $activeFast = null)
-    {
-        if (array_key_exists($action, Repository::get('nav'))) {
+ 
+        if ($activeFast) {
+            unset($navActions[1]);
+        } else {
+            unset($navActions[3]);
+            unset($navActions[4]);
+        }
+        
+        if (array_key_exists($selectedOption,$navActions)) {
 
-            $selectedAction = Repository::get('nav')[$action]['action'];
+            $selectedAction = Repository::get('nav')[$selectedOption]['action'];
 
-            if ($activeFast) {
-            }
+        
 
-            if ($action == 6) {
+            if ($selectedOption == 6) {
                 $this->$selectedAction();
             } else {
                 FastAction::$selectedAction();
             }
+        }else{
+            output("Option $selectedOption dosent Exist!");
         }
     }
     function printnav(array $data, $activeFast = null)
