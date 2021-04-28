@@ -49,7 +49,7 @@ class FastAction
 
         if ($fast == true) {
 
-            // output('motivation quote:'Quotes::getOne())
+          
             self::printFast($fast);
         } else {
 
@@ -152,6 +152,10 @@ class FastAction
     protected static function printFast($fast)
     {
         brakeLine();
+
+        $quote=new Quote();
+
+        output($quote->getOne());
 
         outputOption('Status', $fast->status ? 'Active' : 'Inactive');
 

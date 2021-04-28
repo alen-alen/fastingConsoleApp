@@ -8,13 +8,7 @@ class App
 {
     private $status = true;
 
-    private $quote;
-
-    public function __construct(Quote $quote)
-    {
-        $this->quote=$quote;
-    }
-
+    
     public function  run()
     {
         while ($this->status) {
@@ -55,10 +49,6 @@ class App
 
                 $this->$selectedAction();
             } else {
-
-                if($selectedOption==2){
-                    output('Motivation quote: '. '\''. $this->quote->getOne().'\'' );
-                }
 
                 FastAction::$selectedAction();
             }

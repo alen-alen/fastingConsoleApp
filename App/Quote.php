@@ -9,13 +9,10 @@ class Quote
 
     public function __construct()
     {
-        $this->quotes = $this->updateQuotes();
-    }
 
-    protected function updateQuotes()
-    {
-        return json_decode(file_get_contents("https://type.fit/api/quotes"));
+        $this->quotes = json_decode(file_get_contents('myQuotes.json'));
     }
+    
     public function getOne()
     {
         $quote = $this->quotes[rand(0, count($this->quotes) - 1)];
