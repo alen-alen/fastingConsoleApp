@@ -9,7 +9,6 @@ class Quote
 
     public function __construct()
     {
-
         $this->quotes = json_decode(file_get_contents('myQuotes.json'));
     }
     
